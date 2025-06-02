@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nodejs Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .wave-bg {
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wave-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0,100 C150,200 350,0 500,100 C650,200 850,0 1000,100 C1150,200 1200,150 1200,100 L1200,0 L0,0 Z' fill='%23ec4899'/%3E%3Cpath d='M0,150 C150,250 350,50 500,150 C650,250 850,50 1000,150 C1150,250 1200,200 1200,150 L1200,0 L0,0 Z' fill='%23f9a8d4' opacity='0.7'/%3E%3Cpath d='M0,200 C150,300 350,100 500,200 C650,300 850,100 1000,200 C1150,300 1200,250 1200,200 L1200,0 L0,0 Z' fill='%23fde68a' opacity='0.5'/%3E%3C/svg%3E") center/cover;
+        }
+
+        .blog-card {
+            transition: all 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .tag {
+            transition: all 0.2s ease;
+        }
+        
+        .tag:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header with Wave Background -->
+    <header class="wave-bg relative h-64 flex items-center justify-center">
+        <div class="relative z-10 text-center">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Welcome to my blog!</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Introduction -->
+        <div class="bg-orange-50 border-l-4 border-orange-400 p-6 mb-8 rounded-r-lg">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <span class="text-2xl">🧠</span>
+                </div>
+                <div class="ml-3">
+                    <p class="text-gray-700 leading-relaxed">
+                        Here, I share my thoughts, experiences, and insights on a variety of topics. I hope you find the content engaging and insightful. Enjoy reading!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tags -->
+        <div class="flex items-center gap-4 mb-8">
+            <button class="tag bg-gray-800 text-white px-4 py-2 rounded-full text-sm hover:bg-gray-700">
+                📚 All blogs
+            </button>
+            <button class="tag bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm hover:bg-gray-300">
+                🏷️ Grouped by tag
+            </button>
+        </div>
+
+        <!-- Blog Section Title -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">My blog</h2>
+
+        <!-- Blog Cards Grid -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Blog Card 1 -->
+           <% Posts.forEach(post => { %>
+                <a href="/posts/content/<%= post.slug %>" class="block">
+                    <article class="blog-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                        <div class="h-48 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-500 relative">
+                            <img src="<%= post.picture_url %>"
+                                alt="<%= post.title %>"
+                                class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                                <%= post.title %>
+                            </h3>
+                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">
+                                <%= post.description %>
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs"><%= post.category_name %></span>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            <% }) %>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <div class="inline-flex items-center justify-center w-12 h-12 bg-orange-500 rounded-full text-white font-bold text-lg mb-4">
+                dave's
+            </div>
+            <p class="text-gray-300">Thanks for visiting my blog! Stay curious and keep learning.</p>
+        </div>
+    </footer>
+</body>
+</html>

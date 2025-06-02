@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Blog Post</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .form-group {
+            transition: all 0.3s ease;
+        }
+        
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .file-upload-area {
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-area:hover {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+        }
+        
+        .char-counter {
+            font-size: 0.75rem;
+            transition: color 0.3s ease;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-white mb-2">✍️ Create New Blog Post</h1>
+                <p class="text-indigo-100">Share your thoughts and insights with the world</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Form -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <form id="blogForm" class="space-y-6" action="/posts/addpost" method="POST" enctype="multipart/form-data">
+                <!-- Blog Post Information Section -->
+
+                <!-- Blog Post Information Section -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">📝 Blog Post Details</h2>
+                    
+                    <!-- Title -->
+                    <div class="form-group mb-6">
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                            Post Title *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            required
+                            maxlength="100"
+                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                            placeholder="Enter an engaging title for your blog post"
+                            oninput="updateCharCount('title', 'titleCount', 100)"
+                        >
+                        <div class="flex justify-between mt-1">
+                            <span class="text-xs text-gray-500">Make it catchy and descriptive</span>
+                            <span id="titleCount" class="char-counter text-gray-400">0/100</span>
+                        </div>
+                    </div>
+
+                    <!-- Slug -->
+                    <div class="form-group mb-6">
+                        <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">
+                            URL Slug *
+                        </label>
+                        <div class="flex items-center">
+                            <span class="text-gray-500 bg-gray-100 px-3 py-3 border border-r-0 border-gray-300 rounded-l-lg text-sm">
+                                yoursite.com/blog/
+                            </span>
+                            <input 
+                                type="text" 
+                                id="slug" 
+                                name="slug" 
+                                required
+                                pattern="[a-z0-9-]+"
+                                class="form-input flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                                placeholder="my-awesome-blog-post"
+                                oninput="generateSlug(this)"
+                            >
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Only lowercase letters, numbers, and hyphens allowed</p>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group mb-6">
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            Category *
+                        </label>
+                        <select 
+                            id="category_id" 
+                            name="category_id" 
+                            required
+                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                        >
+                            <option value="">Select a category</option>
+                            <option value="1">Technology</option>
+                            <option value="2">Lifestyle</option>
+                            <option value="3">Travel</option>
+                            <option value="4">Food</option>
+                            <option value="5">Health & Wellness</option>
+                            <option value="6">Business</option>
+                            <option value="7">Education</option>
+                            <option value="8">Entertainment</option>
+                            <option value="9">Sports</option>
+                            <option value="10">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group mb-6">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                            Short Description *
+                        </label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            required
+                            maxlength="300"
+                            rows="3"
+                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
+                            placeholder="Write a brief description that will appear in search results and social media previews..."
+                            oninput="updateCharCount('description', 'descCount', 300)"
+                        ></textarea>
+                        <div class="flex justify-between mt-1">
+                            <span class="text-xs text-gray-500">This will be used for SEO and previews</span>
+                            <span id="descCount" class="char-counter text-gray-400">0/300</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Section -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">📄 Content</h2>
+                    
+                    <div class="form-group">
+                        <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+                            Blog Post Content *
+                        </label>
+                        <textarea 
+                            id="content" 
+                            name="content" 
+                            required
+                            rows="15"
+                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-y"
+                            placeholder="Write your blog post content here... You can use markdown formatting if your backend supports it."
+                        ></textarea>
+                        <div class="mt-2">
+                            <span class="text-xs text-gray-500">💡 Tip: Use clear headings, short paragraphs, and bullet points for better readability</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Section -->
+                <div class="pb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">🖼️ Featured Image</h2>
+                    
+                    <div class="form-group">
+                        <label for="picture_url" class="block text-sm font-medium text-gray-700 mb-2">
+                            Image URL
+                        </label>
+                        <input 
+                            type="url" 
+                            id="picture_url" 
+                            name="picture_url" 
+                            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                            placeholder="https://example.com/image.jpg"
+                            oninput="previewImage(this.value)"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Enter a direct URL to your featured image</p>
+                        
+                        <!-- Image Preview -->
+                        <div id="imagePreview" class="mt-4 hidden">
+                            <p class="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                            <img id="previewImg" src="" alt="Preview" class="max-w-xs rounded-lg shadow-md">
+                        </div>
+                    </div>
+
+                    <!-- Alternative File Upload -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Or Upload Image File
+                        </label>
+                        <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer">
+                            <input type="file" id="imageFile" name="imageFile" accept="image/*" class="hidden" onchange="handleFileUpload(this)">
+                            <div onclick="document.getElementById('imageFile').click()">
+                                <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <p class="text-gray-600">Click to upload an image</p>
+                                <p class="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-6">
+                    <div class="flex items-center justify-between">
+                        <button 
+                            type="button" 
+                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                            onclick="resetForm()"
+                        >
+                            🔄 Reset Form
+                        </button>
+                        
+                        <button 
+                            type="submit" 
+                            class="submit-btn px-8 py-3 text-white font-semibold rounded-lg shadow-lg"
+                        >
+                            🚀 Publish Blog Post
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Character counter function
+        function updateCharCount(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            const currentLength = input.value.length;
+            
+            counter.textContent = `${currentLength}/${maxLength}`;
+            
+            if (currentLength > maxLength * 0.9) {
+                counter.classList.add('text-red-500');
+                counter.classList.remove('text-gray-400');
+            } else {
+                counter.classList.add('text-gray-400');
+                counter.classList.remove('text-red-500');
+            }
+        }
+
+        // Slug generator
+        function generateSlug(input) {
+            let slug = input.value
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+            input.value = slug;
+        }
+
+        // Auto-generate slug from title
+        document.getElementById('title').addEventListener('input', function() {
+            const slugInput = document.getElementById('slug');
+            if (!slugInput.value) {
+                let slug = this.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .trim();
+                slugInput.value = slug;
+            }
+        });
+
+        // Image preview function
+        function previewImage(url) {
+            const preview = document.getElementById('imagePreview');
+            const img = document.getElementById('previewImg');
+            
+            if (url && isValidUrl(url)) {
+                img.src = url;
+                preview.classList.remove('hidden');
+                img.onerror = function() {
+                    preview.classList.add('hidden');
+                };
+            } else {
+                preview.classList.add('hidden');
+            }
+        }
+
+        // URL validation
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        // File upload handler
+        function handleFileUpload(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('picture_url').value = e.target.result;
+                    previewImage(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Form reset
+        function resetForm() {
+            if (confirm('Are you sure you want to reset the form? All data will be lost.')) {
+                document.getElementById('blogForm').reset();
+                document.getElementById('imagePreview').classList.add('hidden');
+                document.getElementById('titleCount').textContent = '0/100';
+                document.getElementById('descCount').textContent = '0/300';
+            }
+        }
+
+        // Form submission - Sadece console log, preventDefault kaldırıldı
+        document.getElementById('blogForm').addEventListener('submit', function(e) {
+            console.log('Form submit event triggered');
+            console.log('Form action:', this.action);
+            console.log('Form method:', this.method);
+            
+            // Form verilerini console'da göster - name ve email kaldırıldı
+            const formData = new FormData(this);
+            console.log('Form data:');
+            for (let [key, value] of formData.entries()) {
+                console.log(key + ':', value);
+            }
+            
+            // Normal HTML form submission devam etsin
+            console.log('Form being submitted to backend...');
+        });
+    </script>
+</body>
+</html>
